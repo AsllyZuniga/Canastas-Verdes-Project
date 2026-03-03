@@ -63,6 +63,7 @@ export class ProductsService {
         category: true,
       },
     });
+    
     if (!product) {
       throw new NotFoundException(`Product ID: ${id} not found `);
     }
