@@ -14,7 +14,7 @@ export const typeOrmConfig = (
   ssl: {
     rejectUnauthorized: false,
   },
-  logging: true,
+  logging: false,
   entities: [join(__dirname + '../../**/*.entity.{ts,js}')],
   synchronize: true,
 });
