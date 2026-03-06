@@ -1,0 +1,17 @@
+export const categories = [
+  { name: 'Autocuidado' },
+  { name: 'Verduras' },
+  { name: 'Sazonadores' },
+  { name: 'Frutas' },
+  { name: 'Snacks' },
+  { name: 'Postres' },
+  { name: 'Aromáticas' },
+  { name: 'Café' },
+  { name: 'Legumbres' },
+  { name: 'Productos de Temporada' },
+  { name: 'Lácteos' },
+  { name: 'Adicionales' },
+  { name: 'Proteínas' },
+  { name: 'Hongo Comestibles' },
+  { name: 'Tubérculo' },
+];

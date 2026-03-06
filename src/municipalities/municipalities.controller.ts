@@ -1,47 +1,45 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { MunicipalitiesService } from './municipalities.service';
+import { CreateMunicipalityDto } from './dto/create-municipality.dto';
+import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
 import { IdValidationPipe } from 'src/common/pipes/id-validation/id-validation.pipe';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/users/entities/user.entity';
 
-@Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+@Controller('municipalities')
+export class MunicipalitiesController {
+  constructor(private readonly municipalitiesService: MunicipalitiesService) {}
 
-  
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  create(@Body() dto: CreateProductDto) {
-    return this.productsService.create(dto);
+  create(@Body() dto: CreateMunicipalityDto) {
+    return this.municipalitiesService.create(dto);
   }
-
 
   @Get()
   findAll() {
-    return this.productsService.findAll();
+    return this.municipalitiesService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id', IdValidationPipe) id: string) {
-    return this.productsService.findOne(+id);
+    return this.municipalitiesService.findOne(+id);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  update(@Param('id', IdValidationPipe) id: string, @Body() dto: UpdateProductDto) {
-    return this.productsService.update(+id, dto);
+  update(@Param('id', IdValidationPipe) id: string, @Body() dto: UpdateMunicipalityDto) {
+    return this.municipalitiesService.update(+id, dto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   remove(@Param('id', IdValidationPipe) id: string) {
-    return this.productsService.remove(+id);
+    return this.municipalitiesService.remove(+id);
   }
 }

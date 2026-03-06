@@ -9,20 +9,18 @@ import {
 import { ProductVariant } from '../../product-variants/entities/product-variant.entity';
 
 @Entity()
-export class Product {
+export class Municipality {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 150, unique: true })
+  @Column({ type: 'varchar', length: 10, unique: true })
+  code: string;
+
+  @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
-  @Column({
-    type: 'varchar',
-    length: 120,
-    nullable: true,
-    default: 'default.svg',
-  })
-  image: string;
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -30,6 +28,6 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => ProductVariant, (variant) => variant.product)
+  @OneToMany(() => ProductVariant, (variant) => variant.municipality)
   variants: ProductVariant[];
 }

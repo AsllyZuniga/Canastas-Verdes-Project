@@ -1,0 +1,51 @@
+export const products = [
+  {
+    name: 'Aceite de romero',
+    price: 6000,
+    inventory: 100,
+    image: 'aceite-romero.jpg',
+    categoryId: 1,
+  },
+  {
+    name: 'Aceite naranja',
+    price: 6000,
+    inventory: 100,
+    image: 'aceite-naranja.jpg',
+    categoryId: 1,
+  },
+  {
+    name: 'Acelga',
+    price: 2500,
+    inventory: 100,
+    image: 'acelga.jpg',
+    categoryId: 2,
+  },
+  {
+    name: 'Achiote molido',
+    price: 3000,
+    inventory: 100,
+    image: 'achiote.jpg',
+    categoryId: 3,
+  },
+  {
+    name: 'Aguacate',
+    price: 2500,
+    inventory: 100,
+    image: 'aguacate.jpg',
+    categoryId: 4,
+  },
+  {
+    name: 'Ají en polvo',
+    price: 3000,
+    inventory: 100,
+    image: 'aji-polvo.jpg',
+    categoryId: 3,
+  },
+  {
+    name: 'Apio',
+    price: 9000,
+    inventory: 100,
+    image: 'apio.jpg',
+    categoryId: 2,
+  },
+];
