@@ -1,98 +1,342 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🌿 Canastas Verdes — Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend de la plataforma de e-commerce agrícola colombiana **Canastas Verdes**, construido con NestJS y PostgreSQL. Conecta productores de 6 municipios de Nariño con consumidores finales a través de un catálogo de productos con variantes por municipio, presentación y categoría.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Tecnologías
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **NestJS** — framework backend con TypeScript
+- **PostgreSQL** — base de datos relacional
+- **TypeORM** — ORM para manejo de entidades y relaciones
+- **JWT + Passport** — autenticación y autorización
+- **bcrypt** — hash de contraseñas
+- **Render** — despliegue en la nube
 
-## Project setup
+---
+
+## 📦 Instalación
 
 ```bash
-$ npm install
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/canastas-verdes-backend.git
+cd canastas-verdes-backend
+
+# Instalar dependencias
+npm install --legacy-peer-deps
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales
+
+# Levantar en desarrollo
+npm run start:dev
 ```
 
-## Compile and run the project
+---
+
+## ⚙️ Variables de entorno
+
+Crea un archivo `.env` en la raíz con las siguientes variables:
+
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASS=tu_password
+DATABASE_NAME=canastas_verdes
+JWT_SECRET=canastas_verdes_secret_2026
+```
+
+---
+
+## 🌱 Seeder
+
+Resetea la base de datos e inserta los datos iniciales (categorías, municipios y usuarios de prueba):
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npx ts-node src/seeder.ts
 ```
 
-## Run tests
+> ⚠️ **ADVERTENCIA:** Este comando borra **todos los datos** de la base de datos. Úsalo solo en desarrollo.
 
-```bash
-# unit tests
-$ npm run test
+### Datos que inserta el seeder:
 
-# e2e tests
-$ npm run test:e2e
+**15 Categorías:**
+Autocuidado, Verduras, Sazonadores, Frutas, Snacks, Postres, Aromáticas, Café, Lácteos, Legumbres, Proteínas, Adicionales, Productos de Temporada, Hongo Comestibles, Tubérculo
 
-# test coverage
-$ npm run test:cov
+**6 Municipios de Nariño:**
+| Código | Municipio |
+|--------|-----------|
+| Y | Yacuanquer |
+| G | Gualmatán |
+| C | Consacá |
+| F | La Florida |
+| A | Ancuya |
+| S | Sandoná |
+
+**2 Usuarios de prueba:**
+| Email | Password | Rol |
+|-------|----------|-----|
+| admin@canastasverdes.com | admin123 | ADMIN |
+| cliente@gmail.com | cliente123 | CLIENT |
+
+---
+
+## 🗄️ Modelo de datos
+
+```
+category ─────────────┐
+municipality ─────────┤
+presentation ─────────┼──► product_variant ──► transaction_contents
+product ──────────────┘                              │
+                                                     ▼
+user ──────────────────────────────────────► transaction
 ```
 
-## Deployment
+### Tablas
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+| Tabla | Descripción |
+|-------|-------------|
+| `user` | Clientes y administradores |
+| `category` | 15 categorías de productos |
+| `municipality` | 6 municipios de Nariño |
+| `presentation` | Presentaciones (500gr, Atado, Kilo...) |
+| `product` | Producto base (nombre e imagen) |
+| `product_variant` | Variante con precios, inventario y relaciones |
+| `transaction` | Pedidos con orderNumber y status |
+| `transaction_contents` | Items de cada pedido |
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### ProductVariant — tabla central
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```typescript
+{
+  id, sku,
+  costPcc,         // costo que paga Canastas Verdes al productor
+  logisticsCost,   // costo de logística
+  transportCost,   // costo de transporte
+  suggestedPrice,  // precio sugerido calculado
+  salePrice,       // precio final para el cliente
+  inventory,       // unidades disponibles
+  product,         // nombre e imagen base
+  category,        // Verduras, Frutas, etc.
+  municipality,    // Yacuanquer, Gualmatán, etc.
+  presentation     // 500gr, Atado, Kilo, etc.
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 📡 Endpoints
 
-Check out a few resources that may come in handy when working with NestJS:
+### Públicos (sin autenticación)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+POST /auth/login
+POST /users/register
 
-## Support
+GET  /categories
+GET  /municipalities
+GET  /presentations
+GET  /products
+GET  /product-variants
+GET  /product-variants?categoryId=2
+GET  /product-variants?municipalityId=1
+GET  /product-variants?categoryId=2&municipalityId=1&take=10&skip=0
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Cliente autenticado (JWT)
 
-## Stay in touch
+```
+POST /transactions              → crear pedido
+GET  /transactions/my-orders    → ver mis pedidos
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Solo Admin (JWT + rol ADMIN)
 
-## License
+```
+POST   /products
+PATCH  /products/:id
+DELETE /products/:id
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+POST   /product-variants
+PATCH  /product-variants/:id
+DELETE /product-variants/:id
+
+POST   /categories
+PATCH  /categories/:id
+DELETE /categories/:id
+
+POST   /municipalities
+PATCH  /municipalities/:id
+DELETE /municipalities/:id
+
+POST   /presentations
+DELETE /presentations/:id
+
+GET    /transactions
+PATCH  /transactions/:id/status
+DELETE /transactions/:id
+
+GET    /users
+PATCH  /users/:id
+DELETE /users/:id
+```
+
+---
+
+## 🔐 Autenticación
+
+El sistema usa JWT. Para endpoints protegidos envía el token en el header:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Login:**
+```json
+POST /auth/login
+{
+  "email": "admin@canastasverdes.com",
+  "password": "admin123"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "access_token": "eyJhbGci...",
+  "user": {
+    "id": 1,
+    "name": "Administrador",
+    "email": "admin@canastasverdes.com",
+    "role": "admin"
+  }
+}
+```
+
+---
+
+## 🛒 Flujo de creación de productos (desde el admin)
+
+El admin debe crear los datos en este orden desde el panel:
+
+```
+1. Presentaciones  →  POST /presentations
+2. Productos base  →  POST /products
+3. Variantes       →  POST /product-variants
+```
+
+**Ejemplo de variante:**
+```json
+POST /product-variants
+{
+  "sku": "GF001A",
+  "costPcc": 2000,
+  "logisticsCost": 100,
+  "transportCost": 100,
+  "suggestedPrice": 2200,
+  "salePrice": 2500,
+  "inventory": 50,
+  "productId": 1,
+  "categoryId": 2,
+  "municipalityId": 2,
+  "presentationId": 1
+}
+```
+
+---
+
+## 🛍️ Flujo de compra (cliente)
+
+```
+1. Cliente ve catálogo  →  GET /product-variants
+2. Filtra por categoría →  GET /product-variants?categoryId=2
+3. Inicia sesión        →  POST /auth/login
+4. Crea pedido          →  POST /transactions
+5. Ve sus pedidos       →  GET /transactions/my-orders
+```
+
+**Ejemplo de pedido:**
+```json
+POST /transactions
+Authorization: Bearer <token>
+{
+  "contents": [
+    {
+      "productVariantId": 1,
+      "quantity": 2,
+      "price": 2500
+    }
+  ]
+}
+```
+
+---
+
+## 📊 Estados de un pedido
+
+| Status | Descripción |
+|--------|-------------|
+| `pending` | Recién creado, esperando confirmación |
+| `confirmed` | Admin confirmó el pedido |
+| `delivered` | Pedido entregado al cliente |
+| `cancelled` | Pedido cancelado |
+
+---
+
+## 🏗️ Estructura del proyecto
+
+```
+src/
+├── auth/
+│   ├── decorators/       → @Roles()
+│   ├── guards/           → JwtAuthGuard, RolesGuard
+│   ├── strategies/       → jwt.strategy.ts
+│   ├── auth.controller.ts
+│   ├── auth.module.ts
+│   └── auth.service.ts
+├── categories/
+├── common/
+│   └── pipes/            → IdValidationPipe
+├── config/
+│   └── typeorm.config.ts
+├── municipalities/
+├── presentations/
+├── product-variants/
+├── products/
+├── seeder/
+├── transactions/
+├── users/
+├── app.module.ts
+└── seeder.ts             → punto de entrada del seeder
+```
+
+---
+
+## 🌐 Despliegue en Render
+
+1. Crear un servicio Web en Render apuntando al repositorio
+2. Configurar las variables de entorno en el dashboard de Render
+3. Build command: `npm install && npm run build`
+4. Start command: `npm run start:prod`
+
+> ⚠️ En producción cambiar `synchronize: true` a `false` en `typeorm.config.ts`
+
+---
+
+## 📝 Notas importantes
+
+- El inventario se descuenta automáticamente al crear un pedido
+- Si se cancela un pedido, el inventario se restaura automáticamente
+- Las contraseñas se guardan hasheadas con bcrypt (nunca en texto plano)
+- El campo `password` tiene `select: false` — no aparece en consultas normales
+- Los IDs usan autoincremento de PostgreSQL (SERIAL)
+
+---
+
+## 👨‍💻 Desarrollado para
+
+**Canastas Verdes** — Plataforma de comercio agrícola  
+Conectando productores de Nariño con consumidores  
+Pasto, Colombia 🇨🇴
