@@ -1,6 +1,6 @@
 # 🌿 Canastas Verdes — Backend API
 
-Backend de la plataforma de e-commerce agrícola colombiana **Canastas Verdes**, construido con NestJS y PostgreSQL. Conecta productores de 6 municipios de Nariño con consumidores finales a través de un catálogo de productos con variantes por municipio, presentación y categoría.
+Backend de la plataforma de e-commerce agrícola colombiana **Canastas Verdes**, construido con NestJS y PostgreSQL. Conecta productores de los municipios de Nariño con consumidores finales a través de un catálogo de productos con variantes por municipio, presentación y categoría.
 
 ---
 
