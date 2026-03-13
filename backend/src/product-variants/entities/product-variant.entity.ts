@@ -46,8 +46,10 @@ export class ProductVariant {
   @UpdateDateColumn()
   updatedAt: Date;
 
+
   @ManyToOne(() => Product, (product) => product.variants, { eager: true })
   @JoinColumn({ name: 'productId' })
+  
   product: Product;
 
   @ManyToOne(() => Category, { eager: true })
