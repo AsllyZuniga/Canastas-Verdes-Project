@@ -7,7 +7,7 @@ export const typeOrmConfig = (
 ): TypeOrmModuleOptions => ({
   type: 'postgres',
   host: configService.get<string>('DATABASE_HOST'),
-  port: configService.get('DATABASE_PORT'),
+  port: configService.get<number>('DATABASE_PORT'),
   username: configService.get<string>('DATABASE_USER'),
   password: configService.get<string>('DATABASE_PASS'),
   database: configService.get<string>('DATABASE_NAME'),
@@ -15,6 +15,6 @@ export const typeOrmConfig = (
     rejectUnauthorized: false,
   },
   logging: false,
-  entities: [join(__dirname + '../../**/*.entity.{ts,js}')],
+  entities: [join(__dirname, '../../**/*.entity.{ts,js}')],
   synchronize: true,
 });
