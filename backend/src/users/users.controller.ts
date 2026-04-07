@@ -13,11 +13,6 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   
-  @Post('register')
-  register(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
-  }
-
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
