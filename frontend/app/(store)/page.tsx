@@ -2,33 +2,53 @@ import ProductCard from "@/components/products/ProductCard"
 import Slider from "@/components/ui/Slider"
 import Heading from "@/components/ui/Heading"
 import { CategoriesResponseSchema, ProductVariantsResponseSchema } from "@/src/schemas"
-import { redirect } from "next/navigation"
 import CategoryCarousel from "@/components/categories/CategoryCarousel"
+import { getImagePath } from "@/src/utils"
+
+const API_BASE_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:3001"
 
 async function getCategories() {
-  const url = `${process.env.API_URL}/categories`;
-  const req = await fetch(url);
-  const json = await req.json();
-  const categories = CategoriesResponseSchema.parse(json);
-  return categories;
+    try {
+        const url = `${API_BASE_URL}/categories`;
+        const req = await fetch(url, {
+            next: {
+                tags: ["all-categories"]
+            }
+        });
+
+        if (!req.ok) {
+            return [];
+        }
+
+        const json = await req.json();
+        return CategoriesResponseSchema.parse(json);
+    } catch {
+        return [];
+    }
 }
 
 async function getAllVariants(categoryId?: string) {
-    const url = categoryId
-        ? `${process.env.API_URL}/product-variants?categoryId=${categoryId}`
-        : `${process.env.API_URL}/product-variants`
-    
-    const req = await fetch(url, {
-        next: {
-            tags: ['all-products']
-        }
-    })
-    const json = await req.json()
-    if (!req.ok) {
-        redirect('/1')
+        try {
+                const url = categoryId
+                        ? `${API_BASE_URL}/product-variants?categoryId=${categoryId}`
+                        : `${API_BASE_URL}/product-variants`
+
+                const req = await fetch(url, {
+                        next: {
+                                tags: ['all-products']
+                        }
+                })
+
+                if (!req.ok) {
+                        return []
+                }
+
+                const json = await req.json()
+                const data = ProductVariantsResponseSchema.parse(json)
+                return data.variants
+        } catch {
+                return []
     }
-    const data = ProductVariantsResponseSchema.parse(json)
-    return data.variants
 }
 
 type SearchParams = Promise<{ categoryId?: string }>
@@ -38,10 +58,15 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     const categoryId = resolvedParams?.categoryId
     const variants = await getAllVariants(categoryId)
     const categories = await getCategories()
+    const sliderImages = variants
+        .map((variant) => variant.product.image)
+        .filter((image): image is string => Boolean(image))
+        .slice(0, 6)
+        .map((image) => getImagePath(image))
 
     return (
         <div className="pb-10">
-            <Slider />
+            <Slider images={sliderImages} />
             <CategoryCarousel categories={categories} />
             
             <Heading>Nuestros Productos</Heading>
