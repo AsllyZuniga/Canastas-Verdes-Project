@@ -1,21 +1,28 @@
 import ProductCard from "@/components/products/ProductCard"
 import { ProductVariantsArraySchema } from "@/src/schemas"
-import { redirect } from "next/navigation"
 
 type Params = Promise<{ categoryId: string }>
 
+const API_BASE_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:3001"
+
 async function getVariantsByCategory(categoryId: string) {
-    const url = `${process.env.API_URL}/product-variants?categoryId=${categoryId}`
-    const req = await fetch(url, {
-        next: {
-            tags: ['products-by-category']
+    try {
+        const url = `${API_BASE_URL}/product-variants?categoryId=${categoryId}`
+        const req = await fetch(url, {
+            next: {
+                tags: ['products-by-category']
+            }
+        })
+
+        if (!req.ok) {
+            return []
         }
-    })
-    const json = await req.json()
-    if (!req.ok) {
-        redirect('/1')
+
+        const json = await req.json()
+        return ProductVariantsArraySchema.parse(json.variants)
+    } catch {
+        return []
     }
-    return ProductVariantsArraySchema.parse(json.variants)
 }
 
 export default async function StorePage({ params }: { params: Params }) {
