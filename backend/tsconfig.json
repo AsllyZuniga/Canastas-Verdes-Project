@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "module": "CommonJs",
+    "paths": {
+      "src/*": ["./src/*"]
+    },
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
