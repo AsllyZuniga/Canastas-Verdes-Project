@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend de Canastas Verdes
 
-## Getting Started
+Aplicación web desarrollada con Next.js para la tienda y panel de administración de Canastas Verdes. Este README documenta solo el frontend.
 
-First, run the development server:
+## Tecnologías
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- TanStack Query
+- Zustand
+- React Toastify
+- React Dropzone
+- React Calendar
+
+## Requisitos
+
+- Node.js 20 o superior
+- npm, pnpm, yarn o bun
+- El backend levantado y accesible desde la URL configurada en las variables de entorno
+
+## Instalación
+
+```bash
+npm install
+```
+
+## Variables de entorno
+
+El frontend usa estas variables en `.env`:
+
+```env
+API_URL=http://127.0.0.1:3001
+NEXT_PUBLIC_API_URL=http://127.0.0.1:3001
+NEXT_PUBLIC_DOMAIN=http://localhost:3000
+```
+
+Si cambias el puerto o el dominio del backend/frontend, actualiza esos valores.
+
+## Scripts disponibles
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `dev`: arranca el entorno de desarrollo
+- `build`: genera la versión de producción
+- `start`: ejecuta la app compilada
+- `lint`: revisa el código con ESLint
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Uso local
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Levanta el backend.
+2. Verifica que `.env` apunte a la API correcta.
+3. Ejecuta `npm run dev`.
+4. Abre `http://localhost:3000`.
 
-## Learn More
+## Estructura principal
 
-To learn more about Next.js, take a look at the following resources:
+- `app/`: rutas y layouts de Next.js
+- `components/`: componentes reutilizables de UI y formularios
+- `actions/`: acciones del lado del cliente para consumo de la API
+- `src/api.ts`: cliente o helpers de acceso a la API
+- `src/schemas.ts`: esquemas de validación
+- `src/store.ts`: estado global con Zustand
+- `src/utils.ts`: utilidades compartidas
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Rutas principales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/`: página principal del storefront
+- `/(store)/[categoryId]`: vista por categoría
+- `/(store)/client`: área de cliente
+- `/auth/login` y `/auth/register`: autenticación
+- `/admin`: panel administrativo
+- `/admin/farms`: gestión de fincas
+- `/admin/products`: gestión de productos y variantes
+- `/admin/sales`: ventas y reportes
 
-## Deploy on Vercel
+## Funcionalidades
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- catálogo de productos por categorías
+- carrito de compras y checkout
+- autenticación de usuarios
+- cuenta del cliente y seguimiento de pedidos
+- panel administrativo para fincas, productos, variantes y ventas
+- subida de imágenes y formularios de gestión
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notas
+
+- La app está pensada para trabajar junto con el backend del mismo proyecto.
+- Si cambias la API, revisa también los archivos dentro de `actions/` y `src/api.ts`.
