@@ -58,15 +58,21 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     const categoryId = resolvedParams?.categoryId
     const variants = await getAllVariants(categoryId)
     const categories = await getCategories()
+    const fallbackSliderImages = [
+        "/slider/1.png",
+        "/slider/2.png",
+        "/slider/3.png",
+    ]
     const sliderImages = variants
         .map((variant) => variant.product.image)
         .filter((image): image is string => Boolean(image))
         .slice(0, 6)
         .map((image) => getImagePath(image))
+    const imagesToShow = sliderImages.length > 0 ? sliderImages : fallbackSliderImages
 
     return (
         <div className="pb-10">
-            <Slider images={sliderImages} />
+            <Slider images={imagesToShow} />
             <CategoryCarousel categories={categories} />
             
             <Heading>Nuestros Productos</Heading>
