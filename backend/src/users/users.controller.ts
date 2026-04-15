@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto} from './dto/create-user.dto';
 import { UpdateUserDto} from './dto/update-user.dto';
@@ -11,6 +11,20 @@ import { UserRole } from './entities/user.entity';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.CLIENT)
+  me(@Req() req: any) {
+    return this.usersService.findOne(req.user.id);
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.CLIENT)
+  updateMe(@Req() req: any, @Body() dto: UpdateUserDto) {
+    return this.usersService.updateClientProfile(req.user.id, dto);
+  }
 
   
   @Get()
