@@ -9,6 +9,7 @@ type SliderProps = {
 
 export default function Slider({ images = [] }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   const fallbackImages = [
       "/slider/1.png",
@@ -17,6 +18,10 @@ export default function Slider({ images = [] }: SliderProps) {
   ];
 
   const slides = images.length > 0 ? images : fallbackImages;
+
+  const visibleSlides = slides.map((slide, index) =>
+    imageErrors[index] ? fallbackImages[index % fallbackImages.length] : slide
+  );
 
   useEffect(() => {
     setCurrentIndex(0);
@@ -32,11 +37,11 @@ export default function Slider({ images = [] }: SliderProps) {
 
   return (
     <div className="relative w-screen h-[calc(100vh-80px)] left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-10 overflow-hidden mb-20 bg-black z-0 group">
-      {slides.map((imgSrc, index) => {
+      {visibleSlides.map((imgSrc, index) => {
         const isActive = index === currentIndex;
         return (
           <div
-            key={imgSrc}
+            key={`${imgSrc}-${index}`}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               isActive ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
@@ -47,6 +52,7 @@ export default function Slider({ images = [] }: SliderProps) {
               fill
               className="object-cover opacity-60 mix-blend-overlay"
               priority={index === 0}
+              onError={() => setImageErrors((current) => ({ ...current, [index]: true }))}
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -90,7 +96,7 @@ export default function Slider({ images = [] }: SliderProps) {
 
       {/* Dots */}
       <div className="absolute bottom-12 left-0 right-0 z-20 flex justify-center gap-4">
-        {slides.map((_, index) => (
+        {visibleSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
