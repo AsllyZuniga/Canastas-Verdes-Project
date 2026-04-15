@@ -23,6 +23,15 @@ export default async function MainNav() {
                   Admin
               </Link>
             )}
+
+            {role === 'client' && (
+              <Link
+                  href="/client/catalog"
+                  className="hidden sm:block rounded-full bg-green-800 hover:bg-green-700 text-green-100 font-bold py-2 px-5 text-sm transition-colors shadow-inner"
+              >
+                  Mi Cuenta
+              </Link>
+            )}
             
             {!role ? (
               <>
