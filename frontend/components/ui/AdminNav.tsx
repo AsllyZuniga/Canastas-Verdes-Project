@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { logoutUser } from "@/actions/auth-actions"
 
 const adminLinks = [
     { href: '/admin/products?page=1', label: 'Productos' },
@@ -17,7 +18,7 @@ export default function AdminNav() {
             <Link href="/" className="font-black text-xl text-green-700">
                 Canastas Verdes
             </Link>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
                 {adminLinks.map(link => (
                     <Link
                         key={link.href}
@@ -31,6 +32,15 @@ export default function AdminNav() {
                         {link.label}
                     </Link>
                 ))}
+
+                <form action={logoutUser}>
+                    <button
+                        type="submit"
+                        className="rounded bg-red-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-red-700"
+                    >
+                        Salir
+                    </button>
+                </form>
             </div>
         </nav>
     )
