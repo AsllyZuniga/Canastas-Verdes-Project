@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { CreateUserDto} from './dto/create-user.dto';
 import { UpdateUserDto} from './dto/update-user.dto';
 
@@ -19,7 +19,9 @@ export class UsersService {
     if (exists) throw new ConflictException('Email already registered');
 
     const user = this.userRepo.create({
-      ...dto,
+      name: dto.name,
+      email: dto.email,
+      role: UserRole.CLIENT,
       password: await bcrypt.hash(dto.password, 10),
     });
     return this.userRepo.save(user);
@@ -55,6 +57,23 @@ export class UsersService {
     if (dto.password) dto.password = await bcrypt.hash(dto.password, 10);
     Object.assign(user, dto);
     return this.userRepo.save(user);
+  }
+
+  async updateClientProfile(id: number, dto: UpdateUserDto) {
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) throw new NotFoundException(`User #${id} not found`);
+
+    if (dto.name) {
+      user.name = dto.name;
+    }
+
+    if (dto.password) {
+      user.password = await bcrypt.hash(dto.password, 10);
+    }
+
+    await this.userRepo.save(user);
+
+    return this.findOne(id);
   }
 
   async remove(id: number) {
