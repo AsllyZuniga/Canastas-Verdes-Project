@@ -1,51 +1,60 @@
 'use client'
 
-import { useFormState } from 'react-dom'
+import { useActionState, useEffect } from 'react'
 import { loginUser } from '@/actions/auth-actions'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import Link from 'next/link'
+
+type LoginState = {
+  errors: string[]
+  success: boolean
+  redirectTo?: string
+  role?: 'admin' | 'client'
+}
 
 export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
-  const [state, dispatch] = useFormState<{errors: string[], success: boolean}, FormData>(loginUser as any, { errors: [], success: false })
-  const router = useRouter()
+  const [state, dispatch] = useActionState<LoginState, FormData>(
+    loginUser,
+    { errors: [], success: false }
+  )
 
   useEffect(() => {
     if (state.success) {
-      if (redirectTo) {
-        window.location.href = redirectTo // Hard reload to update cookies in layout 
-      } else {
-        window.location.href = '/' // Default redirect 
-      }
+      window.location.href = state.redirectTo ?? '/'
     }
-  }, [state.success, redirectTo, router])
+  }, [state.success, state.redirectTo])
 
   return (
-    <div className="bg-white shadow p-10 rounded-lg max-w-md mx-auto mt-10">
-      <h2 className="text-2xl font-bold text-center text-green-900 mb-6">Iniciar Sesión</h2>
+    <div className="w-full max-w-md mx-auto rounded-2xl border border-emerald-100 bg-white/90 p-8 shadow-xl backdrop-blur">
+      <div className="mb-8 text-center">
+        <h2 className="text-4xl font-black tracking-tight text-emerald-900">Iniciar Sesion</h2>
+        <p className="mt-2 text-sm text-slate-600">Entra a tu cuenta para comprar o administrar.</p>
+      </div>
       
       {state.errors && state.errors.map((error, i) => (
-        <div key={i} className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+        <div key={i} className="mb-4 rounded-md border border-red-300 bg-red-50 p-3 text-red-700" role="alert">
           <p>{error}</p>
         </div>
       ))}
 
       <form action={dispatch} className="space-y-5">
+        <input type="hidden" name="redirectTo" value={redirectTo ?? ''} />
+
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          <label className="mb-2 block text-sm font-semibold text-slate-700">Email</label>
           <input
             type="email"
             name="email"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-green-500"
+            className="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-800 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200"
             required
             defaultValue="admin@canastasverdes.com"
           />
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+          <label className="mb-2 block text-sm font-semibold text-slate-700">Contrasena</label>
           <input
             type="password"
             name="password"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-green-500"
+            className="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-800 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200"
             required
             defaultValue="123456"
           />
@@ -53,10 +62,17 @@ export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
         
         <button
           type="submit"
-          className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
+          className="w-full rounded-lg bg-emerald-700 px-4 py-3 font-bold text-white transition hover:bg-emerald-800"
         >
-          Iniciar Sesión
+          Iniciar Sesion
         </button>
+
+        <p className="text-center text-sm text-slate-600">
+          No tienes cuenta?{' '}
+          <Link href="/auth/register" className="font-semibold text-emerald-700 hover:text-emerald-800">
+            Registrate aqui
+          </Link>
+        </p>
       </form>
     </div>
   )
