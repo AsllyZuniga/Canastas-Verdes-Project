@@ -32,7 +32,7 @@ export default function ProductCard({ variant }: { variant: ProductVariant }) {
           <p className="text-sm text-gray-500 mb-4 flex-1">
             {variant.presentation.description}
           </p>
-          <div className="flex items-end justify-between pt-2 mt-auto border-t border-gray-50 pt-4">
+          <div className="flex items-end justify-between mt-auto border-t border-gray-50 pt-4">
             <div>
               <p className="text-xs text-gray-400 font-medium mb-1">Precio</p>
               <p className="text-2xl font-black text-green-600 tracking-tight">
